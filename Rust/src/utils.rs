@@ -19,9 +19,5 @@ fn hook_impl(info: &panic::PanicInfo) {
 
 #[inline]
 pub fn set_panic_hook() {
-    use std::sync::Once;
-    static SET_HOOK: Once = Once::new();
-    SET_HOOK.call_once(|| {
-        panic::set_hook(Box::new(hook_impl));
-    });
+    panic::set_hook(Box::new(hook_impl));
 }
