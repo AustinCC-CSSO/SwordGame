@@ -1,11 +1,13 @@
 #![no_std]
 #![feature(alloc_error_handler)]
+#![feature(link_llvm_intrinsics)]
 extern crate alloc;
 extern crate wee_alloc;
 
-use crate::utils::{alert, export_str, export_string, to_string};
 use alloc::string::String;
 use core::alloc::Layout;
+
+use crate::utils::{alert, export_str, export_string, to_string};
 
 mod utils;
 

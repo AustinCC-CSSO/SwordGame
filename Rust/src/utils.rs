@@ -1,34 +1,40 @@
-use crate::utils::imports::import_alert;
-use alloc::string::String;
+use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use core::mem;
 use core::panic::PanicInfo;
+
+use crate::utils::imports::{import_alert, import_trap};
 
 mod imports;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
+    unsafe {
+        import_trap();
+    }
     loop {}
 }
 
 #[inline(always)]
-pub fn alert(msg: *mut u8) {
+pub fn alert(msg: *const u8) {
     unsafe {
         import_alert(msg);
     }
 }
 
 #[inline(always)]
-pub fn export_str(s: &str) -> *mut u8 {
-    export_bytes(s.as_bytes())
+pub fn export_str(s: &str) -> *const u8 {
+    return export_string(s.to_string());
 }
 
 #[inline(always)]
-pub fn export_string(s: String) -> *mut u8 {
-    export_bytes(s.as_bytes())
+pub fn export_string(s: String) -> *const u8 {
+    let ptr = s.as_ptr();
+    mem::forget(s);
+    return ptr;
 }
 
-#[inline]
+/*#[inline]
 pub fn export_bytes(s: &[u8]) -> *mut u8 {
     let mut v = Vec::new();
     v.extend_from_slice(s);
@@ -36,7 +42,14 @@ pub fn export_bytes(s: &[u8]) -> *mut u8 {
     let ptr = v.as_mut_ptr();
     mem::forget(v);
     ptr
-}
+}*/
+
+/*#[inline]
+pub fn export_byte_vec(v: Vec<u8>) -> *const u8 {
+    let ptr = v.as_ptr();
+    mem::forget(v);
+    ptr
+}*/
 
 #[no_mangle]
 pub extern "C" fn alloc(size: usize) -> *mut u8 {
