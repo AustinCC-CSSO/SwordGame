@@ -15,7 +15,7 @@ mod utils;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[no_mangle]
-pub extern "C" fn greet2(ptr: *mut u8) -> *const u8 {
+pub extern "C" fn greet2(ptr: *const u8) -> *const u8 {
     let mut string_content = String::from("Hello, ");
 
     string_content.push_str(to_string(ptr).as_str());
