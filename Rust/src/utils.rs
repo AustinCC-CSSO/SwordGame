@@ -37,17 +37,15 @@ pub fn export_str_bytes(s: &[u8]) -> *const u8 {
     let mut v = Vec::with_capacity(s.len() + 1);
     v.extend_from_slice(s);
     v.push(0);
-    let ptr = v.as_mut_ptr();
-    mem::forget(v);
-    ptr
+    export_byte_vec(v)
 }
 
-/*#[inline]
-pub fn export_byte_vec(v: &mut Vec<u8>) -> *const u8 {
+#[inline]
+pub fn export_byte_vec(v: Vec<u8>) -> *const u8 {
     let ptr = v.as_ptr();
     mem::forget(v);
     ptr
-}*/
+}
 
 #[no_mangle]
 pub extern "C" fn alloc(size: usize) -> *const u8 {
